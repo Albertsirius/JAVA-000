@@ -1,8 +1,10 @@
 package io.github.kimmking.gateway.outbound.myhttpClient;
 
+import io.github.kimmking.gateway.filter.MyHttpRequestFilter;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.Headers;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
@@ -10,8 +12,12 @@ import io.netty.handler.codec.http.HttpUtil;
 
 import java.net.URI;
 import java.net.http.HttpClient;
+import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
@@ -34,8 +40,10 @@ public class MyHttpOutboundHandler {
 
     public void handle(final FullHttpRequest fullRequest, final ChannelHandlerContext ctx) {
         final String url = this.backendUrl + fullRequest.uri();
+        //添加头信息，代码耦合度很高，后期要解耦
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .GET()
+                .header(MyHttpRequestFilter.KEY, fullRequest.headers().get(MyHttpRequestFilter.KEY))
                 .uri(URI.create(url))
                 .build();
         try {
@@ -45,6 +53,7 @@ public class MyHttpOutboundHandler {
             e.printStackTrace();
         }
     }
+
 
     private void handleResponse(final FullHttpRequest fullRequest, final ChannelHandlerContext ctx, final HttpResponse<String> httpResponse) throws Exception{
         FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(httpResponse.body().getBytes()));

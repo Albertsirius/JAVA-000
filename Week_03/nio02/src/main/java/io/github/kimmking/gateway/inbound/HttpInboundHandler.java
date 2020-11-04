@@ -1,5 +1,7 @@
 package io.github.kimmking.gateway.inbound;
 
+import io.github.kimmking.gateway.filter.HttpRequestFilter;
+import io.github.kimmking.gateway.filter.MyHttpRequestFilter;
 import io.github.kimmking.gateway.outbound.httpclient4.HttpOutboundHandler;
 import io.github.kimmking.gateway.outbound.myhttpClient.MyHttpOutboundHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -37,7 +39,9 @@ public class HttpInboundHandler extends ChannelInboundHandlerAdapter {
 //            if (uri.contains("/test")) {
 //                handlerTest(fullRequest, ctx);
 //            }
-    
+            //添加Filter，但是方法耦合度太高，后期考虑Filter解耦
+            HttpRequestFilter httpRequestFilter = new MyHttpRequestFilter();
+            httpRequestFilter.filter(fullRequest, ctx);
             handler.handle(fullRequest, ctx);
     
         } catch(Exception e) {
