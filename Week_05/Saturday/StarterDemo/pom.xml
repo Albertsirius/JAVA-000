@@ -13,10 +13,10 @@
     <groupId>huangzihao.homework</groupId>
     <artifactId>starterdemo-spring-boot-starter</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
 
     <properties>
         <java.version>11</java.version>
+        <skipTests>true</skipTests>
     </properties>
 
     <dependencies>
@@ -46,12 +46,12 @@
         </dependency>
     </dependencies>
 
-    <build>
+<!--    <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-    </build>
+    </build>-->
 </project>
