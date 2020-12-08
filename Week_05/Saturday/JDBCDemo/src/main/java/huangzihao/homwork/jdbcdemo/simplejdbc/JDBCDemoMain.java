@@ -1,6 +1,8 @@
 package huangzihao.homwork.jdbcdemo.simplejdbc;
 
+import java.math.BigInteger;
 import java.sql.*;
+import java.util.stream.Stream;
 
 /**
  * <p>使用原生JDBC接口
@@ -32,6 +34,13 @@ public class JDBCDemoMain {
         if(connection == null) return;
 
 
+        //simpleJDBC(connection);
+        transactionJDBC(connection);
+        connection.close();
+    }
+
+    //采用简单插入方法
+    private static void simpleJDBC(Connection connection) {
         try (Statement statement = connection.createStatement()) {
             //增加记录
             statement.executeUpdate("INSERT INTO USER(ID,NAME) VALUES('1','aaa')");
@@ -47,6 +56,23 @@ public class JDBCDemoMain {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        connection.close();
+    }
+
+    //采用批量方式插入
+    private static void transactionJDBC(Connection connection) {
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO USER(ID,NAME) VALUES(?,?)");
+            for( int i = 1; i < 10 ; i++){
+                preparedStatement.setString(1, String.valueOf(i));
+                preparedStatement.setString(2,"aaa");
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+            connection.commit();
+            connection.setAutoCommit(true);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }
