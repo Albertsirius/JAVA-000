@@ -26,7 +26,7 @@ import java.net.http.HttpResponse;
 public final class Rpcfx {
 
     static {
-        ParserConfig.getGlobalInstance().addAccept("io.kimmking");
+        ParserConfig.getGlobalInstance().addAccept("huangzihao.homework.rpcfx");
     }
 
     public static <T> T create(final Class<T> serviceClass, final String url) {
@@ -43,7 +43,7 @@ public final class Rpcfx {
     }
 
     //RpcfxInvocationHandler的改为实现MethodInterceptor接口
-    public static class RpcfxInvocationHandler implements MethodInterceptor {
+    public static class /*RpcfxInvocationHandler implements InvocationHandler*/ RpcfxInvocationHandler implements MethodInterceptor {
 
         public static final MediaType JSONTYPE = MediaType.get("application/json; charset=utf-8");
 
@@ -59,7 +59,7 @@ public final class Rpcfx {
         // [], data class
 
         @Override
-        public Object intercept(Object proxy, Method method, Object[] params, MethodProxy methodProxy) throws Throwable {
+        public Object /*invoke(Object proxy, Method method, Object[] params)*/intercept(Object proxy, Method method, Object[] params, MethodProxy methodProxy) throws Throwable {
             RpcfxRequest request = new RpcfxRequest();
             request.setServiceClass(this.serviceClass.getName());
             request.setMethod(method.getName());
@@ -83,7 +83,7 @@ public final class Rpcfx {
             // 2.尝试使用httpclient或者netty client
 
             //huangzihao 使用java 11 自带的httpclient
-/*            OkHttpClient client = new OkHttpClient();
+            /*OkHttpClient client = new OkHttpClient();
             final Request request = new Request.Builder()
                     .url(url)
                     .post(RequestBody.create(JSONTYPE, reqJson))
@@ -106,6 +106,8 @@ public final class Rpcfx {
                 response.setException(e);
                 return response;
             }
+            /*System.out.println("resp json: "+respJson);
+            return JSON.parseObject(respJson, RpcfxResponse.class);*/
 
         }
     }
