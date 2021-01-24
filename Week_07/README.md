@@ -18,3 +18,7 @@
 #### 读写分离 - 动态切换数据源版本 1.0
 
 作业见https://github.com/Albertsirius/JAVA-000/tree/main/Week_07/multi-datasource1
+
+#### 读写分离 - 数据库框架版本 2.0
+
+作业见https://github.com/Albertsirius/JAVA-000/tree/main/Week_07/multi-datasource2
